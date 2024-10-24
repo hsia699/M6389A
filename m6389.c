@@ -1,6 +1,6 @@
 // Source file for Display M6389A
 // Author: Jeff Zhong
-// Date£º 10/15/2024
+// Dateï¼š 10/15/2024
 
 #include <8052.h>      // Include 8052-specific headers
 #include "m6389.h"      // Include display header
@@ -10,7 +10,7 @@ void delay_ms(unsigned int ms) {
     unsigned int i, j;
     for (i = 0; i < ms; i++) {
         for (j = 0; j < 10; j++);
-    }
+    } 
 }
 
 // Start I2C communication.
@@ -64,17 +64,42 @@ void send_data(unsigned char dat) {
 	delay_ms(1);
 }
 
+// Iterate to loop through all segments on the display.
 void i2c_display(unsigned char dat) {
 	unsigned int i;
 	for (i = 0; i < 40; i++) {
 		i2c_start();
+		// Display I2C address.
 		send_data(M6389_ADDR);
+		// Device select.
 		send_data(0xE0);
 	    send_data(i);
 		send_data(dat);
 		delay_ms(1000);
 		i2c_stop();
 	}
+}
+
+void init_display() {
+	unsigned char all_on = 0xFF;
+	unsigned char all_off = 0x00;
+	
+	i2c_start();
+	send_data(M6389_ADDR);
+	// Device select.
+	send_data(0xE0);
+	delay_ms(1);
+	// Mode set.
+	send_data(0xCE);
+	delay_ms(1);
+
+	i2c_display(all_on);
+    delay_ms(1);
+
+    i2c_display(all_off);
+    delay_ms(1);   
+	
+	i2c_stop();
 }
 
 void verify_truth() {
@@ -98,41 +123,13 @@ void verify_truth() {
 		delay_ms(3000);
 	}
 }
-/**
-void display_on_digit(unsigned char dat_array[4], unsigned int n) {
-    if (n < 5) {
-        // Control digits 0-4
-        i2c_display(dat_array[3]);
-        i2c_display(dat_array[2]);
-        i2c_display(dat_array[1]);
-        i2c_display(dat_array[0]);
-    } else if (n >= 5 && n < 10) {
-        // Control digits 5-9
-        i2c_display(dat_array[0]);
-        i2c_display(dat_array[1]);
-        i2c_display(dat_array[2]);
-        i2c_display(dat_array[3]);
-    }
-}
-**/
-void init_display() {
-	unsigned char all_on = 0xFF;
-	unsigned char all_off = 0x00;
-	
-	i2c_start();
+
+void display_number(unsigned int n, unsigned char value) {
+    i2c_start();
 	send_data(M6389_ADDR);
-	// Device select.
 	send_data(0xE0);
-	delay_ms(1);
-	// Mode set.
-	send_data(0xCE);
-	delay_ms(1);
-
-	i2c_display(all_on);
-    delay_ms(1);
-
-    i2c_display(all_off);
-    delay_ms(1);   
-	
+	send_data(n);
+	send_data(value);
+	delay_ms(1000);
 	i2c_stop();
 }
