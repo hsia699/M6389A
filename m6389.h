@@ -5,7 +5,9 @@
 #ifndef M6389_H
 #define M6389_H
 
-// I2C Address of the Display
+// I2C Address of the Display. The actual I2C address is 0x39, this is the 7-bit address used by the I2C protocol.
+// When communicating with I2C devices, the 7-bit address is combined with a read/write bit to form the 8-bit address.
+// So the original address will be shifted left by one bit, so will use 0x72 in the program.
 #define M6389_ADDR 0x72
 
 // Define SDA and SCL Pins
@@ -22,8 +24,10 @@ void i2c_stop(void);
 void send_data(unsigned char dat);
 // Display function.
 void i2c_display(unsigned char dat);
-//void display_on_digit(unsigned char dat_array[4], unsigned int n);
 // Initialization.
 void init_display();
-
+// Verify the truth table of the screen.
+void verify_truth();
+// Display number 0-9 on the LCD screen.
+void display_number(unsigned int n, unsigned char value);
 #endif
