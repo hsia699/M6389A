@@ -10,10 +10,10 @@ unsigned char array[10][4];
 	
 void main() {
     unsigned int i;
-	int j;
-	// Initialize the display
+    int j;
+    // Initialize the display
     init_display();
-	array[0][0] = 0xC0; array[0][1] = 0x80; array[0][2] = 0xC0; array[0][3] = 0x80;  // Number 0.
+    array[0][0] = 0xC0; array[0][1] = 0x80; array[0][2] = 0xC0; array[0][3] = 0x80;  // Number 0.
     array[1][0] = 0x40; array[1][1] = 0x00; array[1][2] = 0x40; array[1][3] = 0x00;  // Number 1.
     array[2][0] = 0xC0; array[2][1] = 0x40; array[2][2] = 0x80; array[2][3] = 0x80;  // Number 2.
     array[3][0] = 0xC0; array[3][1] = 0x40; array[3][2] = 0x40; array[3][3] = 0x80;  // Number 3.
@@ -24,20 +24,19 @@ void main() {
     array[8][0] = 0xC0; array[8][1] = 0xC0; array[8][2] = 0xC0; array[8][3] = 0x80;  // Number 8.
     array[9][0] = 0xC0; array[9][1] = 0xC0; array[9][2] = 0x40; array[9][3] = 0xC0;  // Number 9.
 
-	// Iterate to go through each command to turn on the desired segment.
-	// Since the first five digits are labeled by a reverse order, so the whole loop will be divided in two sub-loop.
+    // Iterate to go through each command to turn on the desired segment.
+    // Since the first five digits are labeled by a reverse order, so the whole loop will be divided in two sub-loop.
     for (i = 0; i < 10; i++) {
-	    if (i < 5) {
-			for (j = 3; j >= 0; j--) {
-			    display_number((i*4)+(3-j), array[i][j]);
-			}
-		} else {
-		    for (j = 0; j < 4; j++) {
-			    display_number(i*4+j, array[i][j]);
-			}
+        if (i < 5) {
+	    for (j = 3; j >= 0; j--) {
+		display_number((i*4)+(3-j), array[i][j]);
 		}
+	} else {
+	    for (j = 0; j < 4; j++) {
+		display_number(i*4+j, array[i][j]);
+	    }
 	}
-
+    }
     while (1);
-	delay_ms(1000);
+    delay_ms(1000);
 }
